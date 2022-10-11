@@ -1,24 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Alarm : MonoBehaviour
 {
-  // public bool AlarmState =
-
   public bool alarm;
+  public Text displayText;
 
-  void Start()
+    void Start()
     {
          alarm = false;
     }
 
-    public void setAlarm(){
-
-        alarm = true;
-
-       Debug.Log(alarm);
+    void Update()
+    {
+         if(alarm == false)
+         {
+            displayText.text = "";
+         }
     }
 
+    public void setAlarm()
+    {
+        alarm = true;
+        displayText.text = "ALARM IS ON";
+
+        Debug.Log(alarm);
+    }
+
+  
     
 }
