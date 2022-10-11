@@ -119,7 +119,7 @@ public class AgentBehaviour : MonoBehaviour
     // Condition nodes
     public Node.Status isHungry()
     {
-        if(stats.hunger <= 90)
+        if(stats.hunger <= 50)
             return Node.Status.SUCCESS;
         return Node.Status.FAILURE;
     }
@@ -133,14 +133,14 @@ public class AgentBehaviour : MonoBehaviour
 
     public Node.Status isBored()    
     {
-        if(stats.fun <= 70)
+        if(stats.fun <= 60)
             return Node.Status.SUCCESS;
         return Node.Status.FAILURE;
     }
 
      public Node.Status isInNeedOfBathroom()    
     {
-        if(stats.hygiene <= 70)
+        if(stats.hygiene <= 60)
             return Node.Status.SUCCESS;
         return Node.Status.FAILURE;
     }
@@ -148,7 +148,6 @@ public class AgentBehaviour : MonoBehaviour
      public Node.Status alarmIsOn()    
     {
         if(alarmscript.alarm == true){
-        
             return Node.Status.SUCCESS;
         } else{
         
@@ -176,12 +175,12 @@ public class AgentBehaviour : MonoBehaviour
 
     public Node.Status GoToLivingroom()
     {
-       return  GoToLocation(livingroom.transform.position);
+       return GoToLocation(livingroom.transform.position);
     }
 
      public Node.Status GoToBathroom()
     {
-       return  GoToLocation(bathroom.transform.position);
+       return GoToLocation(bathroom.transform.position);
     }
 
     public Node.Status GoToWorkstation()
@@ -220,6 +219,10 @@ public class AgentBehaviour : MonoBehaviour
     public Node.Status WatchTV()
     {     
        Node.Status s = DoActivity(5f);
+       if(s == Node.Status.FAILURE){
+        Debug.Log("HEJ");
+        return Node.Status.FAILURE;
+       }
 
        if(s == Node.Status.SUCCESS){
          //stats.IncreaseFun(1500/stats.fun);
@@ -241,13 +244,23 @@ public class AgentBehaviour : MonoBehaviour
 
     public Node.Status TurnOffAlarm()
     {     
-       Node.Status s = DoActivity(3f);
+     
+        timer += Time.deltaTime;
+        state = ActionState.WORKING;
 
-       if(s == Node.Status.SUCCESS)
-       {
-            alarmscript.alarm = false;
-       }
-       return s;
+            if(state == ActionState.WORKING )
+            {       
+                if(timer >= 3f)
+                {
+                    timer = 0;
+                    state = ActionState.IDLE;
+                     alarmscript.alarm = false;
+                    return Node.Status.SUCCESS;
+                }
+              
+            
+            }
+            return Node.Status.RUNNING;
     }
 
     ///////////////////////////////////////////////////
@@ -261,10 +274,7 @@ public class AgentBehaviour : MonoBehaviour
         timer += Time.deltaTime;
         state = ActionState.WORKING;
 
-    //    if(alarmscript.alarm == true)
-    //     {
-            if(state == ActionState.WORKING )
-            {       
+               
                 if(timer >= duration)
                 {
                     timer = 0;
@@ -272,13 +282,10 @@ public class AgentBehaviour : MonoBehaviour
                     return Node.Status.SUCCESS;
                 }
             
-            }
-            return Node.Status.RUNNING;
-    //     }
-    //    else
-    //     {
-    //         return Node.Status.RUNNING;
-    //     }
+                return Node.Status.RUNNING;
+            
+           
+
     }
 
    
@@ -286,8 +293,12 @@ public class AgentBehaviour : MonoBehaviour
     Node.Status GoToLocation(Vector3 destination)
     {
         float distanceToTarget = Vector3.Distance(destination, this.transform.position);
-        if (alarmscript.alarm == false)
-       {
+        if (alarmscript.alarm == true)
+         { 
+            state = ActionState.IDLE;
+            return Node.Status.FAILURE;
+        }
+
             if (state == ActionState.IDLE)
             {
                 agent.SetDestination(destination);
@@ -304,10 +315,7 @@ public class AgentBehaviour : MonoBehaviour
                 return Node.Status.SUCCESS;
             }
             return Node.Status.RUNNING;
-        }
-        else{
-            return Node.Status.FAILURE;
-        }
+       
     }
 
     Node.Status GoToLocationAlarm(Vector3 destination)

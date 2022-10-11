@@ -34,10 +34,10 @@ public class AgentStats : MonoBehaviour
 
     void DecayNeeds(float _deltaTime)
     {
-        hygiene = Mathf.Clamp(hygiene - _deltaTime/(0.04f*hygiene),0,100);
-        hunger = Mathf.Clamp(hunger - _deltaTime/(0.02f*hunger),0,100);
-        energy = Mathf.Clamp(energy - _deltaTime/(0.06f*energy),0,100);
-        fun = Mathf.Clamp(fun - _deltaTime/(0.01f*fun),0,100);
+        hygiene = Mathf.Clamp(hygiene - _deltaTime/(0.025f*hygiene),0,100);
+        hunger = Mathf.Clamp(hunger - _deltaTime/(0.03f*hunger),0,100);
+        energy = Mathf.Clamp(energy - _deltaTime/(0.05f*energy),0,100);
+        fun = Mathf.Clamp(fun - _deltaTime/(0.02f*fun),0,100);
        // CalculateHappiness();
         SetStats();
        
