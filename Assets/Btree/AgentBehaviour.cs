@@ -90,7 +90,7 @@ public class AgentBehaviour : MonoBehaviour
         haveFun.AddChild(goToLivingroom);
         haveFun.AddChild(watchTV);
 
-         //for Bladder
+         //for Hygiene
         useBathroom.AddChild(needsBathroom);
         useBathroom.AddChild(goToBathroom);
         useBathroom.AddChild(useBathroomNow);
